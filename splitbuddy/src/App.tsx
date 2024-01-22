@@ -1,0 +1,47 @@
+import { useEffect } from "react";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+
+import theme from "./theme/theme";
+import { auth } from './firebase'
+
+import AuthScreen from "./components/screens/AuthScreen";
+import { onAuthStateChanged } from 'firebase/auth'
+import useStore from "./store";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./components/utils/PrivateRoute";
+import PublicRoute from "./components/utils/PublicRoute";
+import Dashboard from "./components/screens/Dashboard";
+import AppLoader from "./components/utils/AppLoader";
+
+
+
+function App() {
+  const { loader, setLoginState, isLogin } = useStore()
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setLoginState(!!user)
+    })
+
+    return () => unsub()
+  }, [])
+
+  if (loader) return <AppLoader />
+
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+
+        <BrowserRouter>
+          <Routes>
+            <Route element={<PublicRoute Component={AuthScreen} />} path='/' />
+            <Route element={<PrivateRoute Component={Dashboard} />} path='/dashboard' />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </>
+  );
+}
+
+export default App;
