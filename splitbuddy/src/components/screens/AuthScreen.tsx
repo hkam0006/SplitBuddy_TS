@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 
 import { auth } from "../../firebase"
 import AppLoader from "../utils/AppLoader"
+import AppLogo from "../AppLogo"
 
 type FormProps = {
   email: string,
@@ -27,6 +28,11 @@ const AuthScreen: React.FC = () => {
     }))
   }
 
+  function changeLoginState(): void {
+    setIsLogin((prevState) => !prevState)
+    setFormData(defaultForm)
+  }
+
   async function handleFormSubmit() {
     setIsLoading(true)
     try {
@@ -47,18 +53,7 @@ const AuthScreen: React.FC = () => {
     <Container sx={{ mt: 20 }} maxWidth='xs'>
       <Stack textAlign='center' alignItems='center'>
         <Stack direction='row' spacing={0.1} >
-          <Typography
-            color="#ffea61"
-            fontStyle='italic'
-            fontWeight={700}
-            variant='h4'
-            sx={{ textDecoration: "line-through" }}
-          >
-            $plit
-          </Typography>
-          <Typography variant="h4">
-            Buddy
-          </Typography>
+          <AppLogo variant='h4' />
         </Stack>
         <Typography color='rgba(255,255,255, 0.6)'>
           Never lose track of expenses.
@@ -88,7 +83,7 @@ const AuthScreen: React.FC = () => {
         >
           {isLogin ? "Log In" : "Sign Up"}
         </Button>
-        <Typography sx={{ cursor: "pointer" }} onClick={() => setIsLogin((prevState) => !prevState)}>
+        <Typography sx={{ cursor: "pointer" }} onClick={() => changeLoginState()}>
           {isLogin ? "Dont have an account?" : "Already have an account?"}
         </Typography>
       </Stack>
