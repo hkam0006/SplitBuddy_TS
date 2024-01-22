@@ -5,7 +5,7 @@ import theme from "./theme/theme";
 import { auth } from './firebase'
 
 import AuthScreen from "./components/screens/AuthScreen";
-import { onAuthStateChanged } from 'firebase/auth'
+import { Unsubscribe, onAuthStateChanged } from 'firebase/auth'
 import useStore from "./store";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/utils/PrivateRoute";
@@ -19,7 +19,7 @@ function App() {
   const { loader, setLoginState, isLogin } = useStore()
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub: Unsubscribe = onAuthStateChanged(auth, (user) => {
       setLoginState(!!user)
     })
 
