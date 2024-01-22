@@ -1,7 +1,11 @@
+import TopBar from "../TopBar"
 
-const Dashboard = () => {
-    return (
-        <div>Dashboard</div>
-    )
+
+const Dashboard: React.FC = () => {
+  return (
+    <>
+      <TopBar />
+    </>
+  )
 }
 export default Dashboard
