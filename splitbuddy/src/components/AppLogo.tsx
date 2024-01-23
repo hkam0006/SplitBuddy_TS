@@ -2,10 +2,11 @@ import { Stack, Typography } from "@mui/material"
 import { Variant } from "@mui/material/styles/createTypography"
 
 type AppLogoProps = {
-  variant: Variant
+  variant: Variant,
+  isXs: boolean
 }
 
-const AppLogo = ({ variant }: AppLogoProps) => {
+const AppLogo = ({ variant, isXs }: AppLogoProps) => {
   return (
     <>
       <Stack direction='row'>
@@ -15,11 +16,11 @@ const AppLogo = ({ variant }: AppLogoProps) => {
           variant={variant}
           sx={{ textDecoration: "line-through" }}
         >
-          $plit
+          {isXs ? "$" : "$plit"}
         </Typography>
-        <Typography variant={variant} fontWeight={700}>
+        {isXs ? <></> : <Typography variant={variant} fontWeight={700}>
           Buddy
-        </Typography>
+        </Typography>}
       </Stack >
     </>
   )

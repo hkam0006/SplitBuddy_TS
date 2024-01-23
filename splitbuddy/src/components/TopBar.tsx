@@ -1,5 +1,6 @@
-import { AppBar, Stack, Toolbar, Button, IconButton, useMediaQuery } from "@mui/material"
+import { AppBar, Stack, Toolbar, Button, IconButton, useMediaQuery, TextField, InputAdornment } from "@mui/material"
 import LogoutIcon from '@mui/icons-material/Logout';
+import SearchIcon from '@mui/icons-material/Search';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { signOut } from "firebase/auth";
 
@@ -14,12 +15,22 @@ const TopBar = () => {
     await signOut(auth)
   }
 
-  console.log(isXs)
 
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <AppLogo variant='h5' />
+        <AppLogo variant='h5' isXs={isXs} />
+        <TextField
+          variant="standard"
+          size="medium"
+          placeholder="Search..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="primary" />
+              </InputAdornment>
+            ),
+          }} />
         <Stack direction='row' spacing={1}>
           {
             isXs ? (
