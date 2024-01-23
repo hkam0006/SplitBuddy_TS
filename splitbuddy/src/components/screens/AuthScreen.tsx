@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { Container, Stack, TextField, Typography, Button } from "@mui/material"
+import { Container, Stack, TextField, Typography, Button, useMediaQuery } from "@mui/material"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 
 import { auth } from "../../firebase"
 import AppLoader from "../utils/AppLoader"
 import AppLogo from "../AppLogo"
+import theme from "../../theme/theme"
 
 type FormProps = {
   email: string,
@@ -20,6 +21,8 @@ const AuthScreen: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true)
   const [formData, setFormData] = useState<FormProps>(defaultForm)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const isXs: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   function handleFormChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setFormData((prevForm) => ({
@@ -53,7 +56,7 @@ const AuthScreen: React.FC = () => {
     <Container sx={{ mt: 20 }} maxWidth='xs'>
       <Stack textAlign='center' alignItems='center'>
         <Stack direction='row' spacing={0.1} >
-          <AppLogo variant='h4' />
+          <AppLogo variant='h4' isXs={false} />
         </Stack>
         <Typography color='rgba(255,255,255, 0.6)'>
           Never lose track of expenses.
