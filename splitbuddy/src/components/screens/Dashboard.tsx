@@ -1,40 +1,26 @@
-import { Grid, Typography, Stack, IconButton, Divider, Box, LinearProgress } from "@mui/material"
+import { Grid, Typography, Stack, IconButton, Divider, Box } from "@mui/material"
 import TopBar from "../TopBar"
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useState } from "react";
+import GroupCard from "../GroupCard";
+
+const placeholderBoards = [
+  { name: "Aussie", id: "skdpoaskopdkasd" },
+  { name: "Home Kong", id: "asdwscxc" },
+]
 
 const Dashboard: React.FC = () => {
+  const [filteredGroups, setFilteredGroups] = useState(placeholderBoards)
+
   return (
     <>
-      <TopBar />
+      <TopBar filteredBoards={filteredGroups} unfilteredBoards={placeholderBoards} setFilteredBoards={setFilteredGroups} />
       <Stack my={3} mx={3}>
         <Grid container spacing={{ sm: 4, xs: 2 }}>
-
-          <Grid item xs={12} sm={3}>
-            <Stack p={3} bgcolor="background.paper" spacing={0} borderLeft="5px solid" borderColor="#66bb6a">
-              <Stack direction='row' justifyContent='space-between' alignItems='center' >
-                <Typography variant="h6" fontWeight={400} >
-                  Home Kong
-                </Typography>
-                <IconButton><OpenInNewIcon /></IconButton>
-              </Stack>
-              <Typography variant="caption">You are all settled</Typography>
-            </Stack>
-          </Grid>
-
-          <Grid item xs={12} sm={3}>
-            <Stack p={3} bgcolor="background.paper" spacing={0} borderLeft="5px solid" borderColor="#f44336">
-              <Stack direction='row' justifyContent='space-between' alignItems='center' >
-                <Typography variant="h6" fontWeight={400} >
-                  Aussie
-                </Typography>
-                <IconButton><OpenInNewIcon /></IconButton>
-              </Stack>
-              <Typography variant="caption">You are owed $200AUD</Typography>
-            </Stack>
-          </Grid>
-
+          {filteredGroups.map((grp) =>
+            <GroupCard name={grp.name} id={grp.id} key={grp.id} />
+          )}
         </Grid>
-
       </Stack >
       <Box >
         <Divider variant="middle" />
