@@ -7,20 +7,19 @@ import { signOut } from "firebase/auth";
 import AppLogo from "./AppLogo"
 import { auth } from "../firebase";
 import theme from "../theme/theme";
-import { SetStateAction } from "react";
+import React, { SetStateAction } from "react";
+import { GroupObject } from "./hooks/useApp";
 
-type GroupObject = {
-  name: string,
-  id: string
-}
+
 
 type TopBarProps = {
   filteredBoards: GroupObject[],
   setFilteredBoards: React.Dispatch<SetStateAction<GroupObject[]>>,
   unfilteredBoards: GroupObject[],
+  showAddGroupModal: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const TopBar = ({ filteredBoards, setFilteredBoards, unfilteredBoards }: TopBarProps) => {
+const TopBar = ({ filteredBoards, setFilteredBoards, unfilteredBoards, showAddGroupModal }: TopBarProps) => {
   const isXs: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   async function handleLogout() {
@@ -32,7 +31,7 @@ const TopBar = ({ filteredBoards, setFilteredBoards, unfilteredBoards }: TopBarP
       return setFilteredBoards(unfilteredBoards)
     }
     const searchQuery = event.target.value.toLowerCase()
-    const arrayCopy = filteredBoards.filter((grp) => grp.name.toLowerCase().includes(searchQuery))
+    const arrayCopy = unfilteredBoards.filter((grp) => grp.name.toLowerCase().includes(searchQuery))
     setFilteredBoards(arrayCopy)
   }
 
@@ -56,12 +55,12 @@ const TopBar = ({ filteredBoards, setFilteredBoards, unfilteredBoards }: TopBarP
           {
             isXs ? (
               <>
-                <IconButton color='primary' size='small'><AddCircleIcon /></IconButton>
+                <IconButton color='primary' size='small' onClick={showAddGroupModal}><AddCircleIcon /></IconButton>
                 <IconButton size='small' onClick={() => handleLogout()} ><LogoutIcon /></IconButton>
               </>
             ) : (
               <>
-                <Button variant="contained">Add Group</Button>
+                <Button startIcon={<AddCircleIcon />} onClick={showAddGroupModal} variant="contained">Add Group</Button>
                 <Button endIcon={<LogoutIcon />} onClick={() => handleLogout()} >Log Out</Button>
               </>
             )
