@@ -1,14 +1,17 @@
 import { Grid, IconButton, Stack, Typography } from "@mui/material"
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { MouseEventHandler } from "react";
 
 
 type GroupCardProps = {
   id: string,
   name: string,
-  key: string
 }
 
 const GroupCard = ({ id, name }: GroupCardProps) => {
+
+  const navigate = useNavigate()
 
   return (
     <Grid item xs={12} sm={3}>
@@ -17,7 +20,7 @@ const GroupCard = ({ id, name }: GroupCardProps) => {
           <Typography variant="h6" fontWeight={400} >
             {name}
           </Typography>
-          <IconButton><OpenInNewIcon /></IconButton>
+          <IconButton onClick={() => navigate(`/dashboard/${id}`)} ><OpenInNewIcon /></IconButton>
         </Stack>
         <Typography variant="caption">You are all settled</Typography>
       </Stack>
