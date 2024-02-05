@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { GroupObject } from './components/hooks/useApp'
+import { GroupObject, InviteProps } from './components/hooks/useApp'
 
 
 type AppStoreProps = {
@@ -7,23 +7,32 @@ type AppStoreProps = {
     setLoginState: Function
     isLogin: boolean,
     groups: GroupObject[],
-    addGroup: Function
+    areGroupsFetched: boolean,
+    setGroups: Function,
+    invites: InviteProps[],
+    areInvitesFetched: boolean,
+    setInvites: Function
 }
 
 const useStore = create<AppStoreProps>((set) => ({
     loader: true,
     isLogin: false,
+    areGroupsFetched: false,
     setLoginState: (status: boolean): void => set({
         isLogin: status,
         loader: false
     }),
-    groups: [
-        { name: "Aussie", id: "skdpoaskopdkasd", owner: "bruh" },
-        { name: "Home Kong", id: "asdwscxc", owner: "bugga" },
-    ],
-    addGroup: (newGroup: GroupObject): void => set(old => ({
-        groups: [newGroup, ...old.groups]
-    }))
+    groups: [],
+    setGroups: (groups: GroupObject[]) => set({
+        groups: groups,
+        areGroupsFetched: true
+    }),
+    invites: [],
+    areInvitesFetched: false,
+    setInvites: (invites: InviteProps[]) => set({
+        invites: invites,
+        areInvitesFetched: true
+    })
 }))
 
 
