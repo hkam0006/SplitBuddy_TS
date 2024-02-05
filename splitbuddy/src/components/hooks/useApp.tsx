@@ -35,7 +35,7 @@ type SplitUser = {
 }
 
 const useApp = () => {
-  const { loader, addGroup, groups, setGroups, setInvites } = useStore()
+  const { loader, groups, setGroups, setInvites } = useStore()
   const { currentUser } = getAuth()
 
   async function createUserDoc(uid: string, email: string) {
