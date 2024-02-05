@@ -1,17 +1,30 @@
-import { Grid, Typography, Stack, IconButton, Divider, Box } from "@mui/material"
+import { Grid, Typography, Stack, Container, Fab } from "@mui/material"
 import TopBar from "../TopBar"
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GroupCard from "../GroupCard";
 import CreateGroupModal from "../CreateGroupModal";
 import NoGroups from "../NoGroups";
-import { GroupObject } from "../hooks/useApp";
+import useApp, { GroupObject, InviteProps } from "../hooks/useApp";
 import useStore from "../../store";
+import AppLoader from "../utils/AppLoader";
+import AddIcon from '@mui/icons-material/Add';
 
 const Dashboard: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false)
-  const { groups } = useStore()
+  const { groups, areGroupsFetched } = useStore()
+  const { fetchGroups } = useApp()
   const [filteredGroups, setFilteredGroups] = useState<GroupObject[]>(groups)
+
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+
+    if (!areGroupsFetched) fetchGroups(setLoading, setFilteredGroups)
+    else setLoading(false)
+
+  }, [])
+
+  if (loading) return <AppLoader />
 
   return (
     <>
@@ -22,19 +35,26 @@ const Dashboard: React.FC = () => {
         showAddGroupModal={() => setShowModal(true)}
       />
       {showModal && <CreateGroupModal onClose={() => setShowModal(false)} />}
+      <Fab color="primary" aria-label="add" sx={{ position: "absolute", bottom: 20, right: 20 }} onClick={() => setShowModal(true)}>
+        <AddIcon />
+      </Fab>
       {groups.length > 0 ? <>
-        <Stack my={3} mx={3}>
-          <Grid container spacing={{ sm: 4, xs: 2 }}>
-            {filteredGroups.map((grp) =>
-              <GroupCard name={grp.name} id={grp.id} key={grp.id} />
-            )}
-          </Grid>
+        <Stack my={3} mx={3} alignItems='center'>
+          {filteredGroups.length > 0 ?
+            <Grid container spacing={{ sm: 4, xs: 2 }}>
+              {filteredGroups.map((grp) =>
+                <GroupCard name={grp.name} id={grp.id} key={grp.id} />
+              )}
+            </Grid> : <Container sx={{ mt: 20 }}>
+              <Stack textAlign='center' alignItems='center' >
+                <Typography variant="h6">No boards that match your query...</Typography>
+                <Typography variant="caption">Try a different query!</Typography>
+              </Stack>
+            </Container>
+          }
         </Stack >
-        <Box >
-          <Divider variant="middle" />
-          <Typography mx={3} my={3} variant="h6">You are all settled</Typography>
-        </Box>
-      </> : <NoGroups />}
+      </> : <NoGroups />
+      }
     </>
   )
 }
