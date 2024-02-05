@@ -13,6 +13,7 @@ import PublicRoute from "./components/utils/PublicRoute";
 import Dashboard from "./components/screens/Dashboard";
 import AppLoader from "./components/utils/AppLoader";
 import GroupScreen from "./components/screens/GroupScreen";
+import InvitesScreen from "./components/screens/InvitesScreen";
 
 
 
@@ -39,6 +40,7 @@ function App() {
             <Route element={<PublicRoute Component={AuthScreen} />} path='/' />
             <Route element={<PrivateRoute Component={Dashboard} />} path='/dashboard' />
             <Route element={<PrivateRoute Component={GroupScreen} />} path='/dashboard/:uid' />
+            <Route element={<PrivateRoute Component={InvitesScreen} />} path='/invites' />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
