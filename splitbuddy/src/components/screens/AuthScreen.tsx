@@ -6,6 +6,7 @@ import { auth } from "../../firebase"
 import AppLoader from "../utils/AppLoader"
 import AppLogo from "../AppLogo"
 import theme from "../../theme/theme"
+import useApp from "../hooks/useApp"
 
 type FormProps = {
   email: string,
@@ -21,6 +22,8 @@ const AuthScreen: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true)
   const [formData, setFormData] = useState<FormProps>(defaultForm)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const { createUserDoc } = useApp()
 
   const isXs: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
@@ -43,6 +46,9 @@ const AuthScreen: React.FC = () => {
         await signInWithEmailAndPassword(auth, formData.email, formData.password)
       } else {
         await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+        if (auth.currentUser) {
+          await createUserDoc(auth.currentUser.uid, formData.email)
+        }
       }
     } catch (err) {
       console.log(err)
