@@ -1,11 +1,12 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 
 const currencies = [
   "USD",
   "AUD",
   "EUR",
   "YEN",
-  "WON"
+  "WON",
+  "HKD"
 ]
 
 const CurrencySelect = () => {
@@ -13,7 +14,7 @@ const CurrencySelect = () => {
   return (
     <FormControl>
       <InputLabel>Currency</InputLabel>
-      <Select label='Currency' labelId="demo-simple-select-label" id="demo-simple-select">
+      <Select label='Currency' labelId="curr-select-label" id="curr-select" >
         {currencies.map((curr) => <MenuItem value={curr} key={curr}>{curr}</MenuItem>)}
       </Select>
     </FormControl>
