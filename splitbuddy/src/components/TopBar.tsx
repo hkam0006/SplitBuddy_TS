@@ -9,7 +9,8 @@ import { auth } from "../firebase";
 import theme from "../theme/theme";
 import React, { SetStateAction } from "react";
 import { GroupObject } from "./hooks/useApp";
-
+import EmailIcon from '@mui/icons-material/Email';
+import { useNavigate } from "react-router-dom";
 
 
 type TopBarProps = {
@@ -35,6 +36,8 @@ const TopBar = ({ filteredBoards, setFilteredBoards, unfilteredBoards, showAddGr
     setFilteredBoards(arrayCopy)
   }
 
+  const navigate = useNavigate()
+
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -55,12 +58,12 @@ const TopBar = ({ filteredBoards, setFilteredBoards, unfilteredBoards, showAddGr
           {
             isXs ? (
               <>
-                <IconButton color='primary' size='small' onClick={showAddGroupModal}><AddCircleIcon /></IconButton>
+                <IconButton size='small' sx={{ bgcolor: "#ffea61" }} onClick={() => navigate("/invites/")}><EmailIcon sx={{ color: "black" }} /></IconButton>
                 <IconButton size='small' onClick={() => handleLogout()} ><LogoutIcon /></IconButton>
               </>
             ) : (
               <>
-                <Button startIcon={<AddCircleIcon />} onClick={showAddGroupModal} variant="contained">Add Group</Button>
+                <Button startIcon={<EmailIcon />} variant="contained" onClick={() => navigate("/invites/")}>Group Invites</Button>
                 <Button endIcon={<LogoutIcon />} onClick={() => handleLogout()} >Log Out</Button>
               </>
             )
