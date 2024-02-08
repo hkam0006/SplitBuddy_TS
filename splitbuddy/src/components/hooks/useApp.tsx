@@ -22,7 +22,8 @@ export type InviteProps = {
   senderId: string
 }
 
-type ExpenseType = {
+export type ExpenseType = {
+  label: string,
   amount: number,
   date: string,
   debtor: string,
@@ -69,6 +70,7 @@ const useApp = () => {
         transactions: []
       }
       await setDoc(groupsCollectionRef, newExpenseGroup)
+
     } catch (err) {
       console.log(err)
     }
@@ -78,10 +80,12 @@ const useApp = () => {
     if (!currentUser) return
     const documentRef = doc(db, `/users/${currentUser.email}`)
     try {
-      onSnapshot(documentRef, (doc) => {
+      const unsub = onSnapshot(documentRef, (doc) => {
         const userInfo = doc.data() as SplitUser
         setInvites(userInfo.invites)
       })
+      setLoading(false)
+      return unsub
     } catch (err) {
       console.log(err)
     } finally {
@@ -89,9 +93,33 @@ const useApp = () => {
     }
   }
 
+  async function fetchSingleGroup(
+    groupId: string,
+    setGroup: React.Dispatch<React.SetStateAction<GroupObject | undefined>>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+    if (!currentUser) return
+    const documentRef = doc(db, `groups/${groupId}`)
+    try {
+      const unsub = onSnapshot(documentRef, (doc) => {
+        if (doc.exists()) {
+          const updatedDoc = {
+            ...doc.data(),
+            createdAt: doc.data().createdAt.toDate().toLocaleString('en-UK')
+          }
+          const finalDoc = updatedDoc as GroupObject
+          setGroup(finalDoc)
+          setLoading(false)
+        }
+      })
+      return unsub
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   async function fetchGroups(
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    setFilteredBoards: React.Dispatch<React.SetStateAction<GroupObject[]>>) {
+    setFilteredBoards: React.Dispatch<React.SetStateAction<GroupObject[]>>): Promise<Unsubscribe | undefined> {
     if (!currentUser) return
     const groupsCollectionRef = collection(db, '/groups/')
     try {
@@ -109,6 +137,8 @@ const useApp = () => {
         setGroups(groups)
         setFilteredBoards(groups)
       })
+      setLoading(false)
+      return unsub
     } catch (err) {
       console.log(err)
     } finally {
@@ -120,7 +150,8 @@ const useApp = () => {
     createUserDoc,
     createGroup,
     fetchGroups,
-    fetchInvites
+    fetchInvites,
+    fetchSingleGroup
   }
 }
 
