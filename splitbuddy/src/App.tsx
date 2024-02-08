@@ -27,11 +27,6 @@ function App() {
       setLoginState(!!user)
     })
 
-    // let unsub: Unsubscribe | undefined
-    // fetchInvites(setLoading).then((res) => {
-    //   unsub = res
-    // })
-
     return () => unsubAuth()
   }, [])
 
