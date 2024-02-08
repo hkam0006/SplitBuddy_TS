@@ -6,20 +6,29 @@ import { AppBar, Grid, IconButton, Stack, Toolbar, Typography } from "@mui/mater
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InviteCard from "../InviteCard";
 import { useNavigate } from "react-router-dom";
+import { Unsubscribe } from "firebase/firestore";
 
 const InvitesScreen: React.FC = () => {
   const { invites, areInvitesFetched } = useStore()
   const { fetchInvites } = useApp()
-  const [loader, setLoader] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!areInvitesFetched) fetchInvites(setLoader)
-    else setLoader(false)
+    let unsub: Unsubscribe | undefined
+    fetchInvites(setLoading).then((res) => {
+      unsub = res
+    })
+
+    return () => {
+      if (unsub) {
+        unsub()
+      }
+    }
   }, [])
 
-  if (loader) return <AppLoader />
+  if (loading) return <AppLoader />
 
   return (
     <>
@@ -43,8 +52,8 @@ const InvitesScreen: React.FC = () => {
 
       <Stack my={3} mx={3} alignItems='center'>
         <Grid container spacing={{ sm: 4, xs: 2 }}>
-          {invites.map((inv) =>
-            <InviteCard senderEmail={inv.senderEmail} senderId={inv.senderId} groupName="bruh" />
+          {invites.map((inv, index) =>
+            <InviteCard key={index} senderEmail={inv.senderEmail} senderId={inv.senderId} groupName="bruh" />
           )}
         </Grid>
       </Stack>
