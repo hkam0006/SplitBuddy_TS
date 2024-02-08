@@ -8,6 +8,7 @@ import useApp, { GroupObject, InviteProps } from "../hooks/useApp";
 import useStore from "../../store";
 import AppLoader from "../utils/AppLoader";
 import AddIcon from '@mui/icons-material/Add';
+import { Unsubscribe } from "firebase/firestore";
 
 const Dashboard: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -18,9 +19,17 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
+    let unsub: Unsubscribe | undefined
 
-    if (!areGroupsFetched) fetchGroups(setLoading, setFilteredGroups)
-    else setLoading(false)
+    fetchGroups(setLoading, setFilteredGroups).then((res) => {
+      unsub = res
+    })
+
+    return () => {
+      if (unsub) {
+        unsub()
+      }
+    }
 
   }, [])
 
@@ -35,13 +44,13 @@ const Dashboard: React.FC = () => {
         showAddGroupModal={() => setShowModal(true)}
       />
       {showModal && <CreateGroupModal onClose={() => setShowModal(false)} />}
-      <Fab color="primary" aria-label="add" sx={{ position: "absolute", bottom: 20, right: 20 }} onClick={() => setShowModal(true)}>
+      <Fab color="primary" aria-label="add" sx={{ position: "fixed", bottom: 20, right: 20 }} onClick={() => setShowModal(true)}>
         <AddIcon />
       </Fab>
       {groups.length > 0 ? <>
         <Stack my={3} mx={3} alignItems='center'>
           {filteredGroups.length > 0 ?
-            <Grid container spacing={{ sm: 4, xs: 2 }}>
+            <Grid container spacing={{ sm: 4, xs: 2 }} sx={{ mb: 10 }}>
               {filteredGroups.map((grp) =>
                 <GroupCard name={grp.name} id={grp.id} key={grp.id} />
               )}
