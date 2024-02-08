@@ -14,18 +14,25 @@ import Dashboard from "./components/screens/Dashboard";
 import AppLoader from "./components/utils/AppLoader";
 import GroupScreen from "./components/screens/GroupScreen";
 import InvitesScreen from "./components/screens/InvitesScreen";
+import useApp from "./components/hooks/useApp";
 
 
 
 function App() {
   const { loader, setLoginState, isLogin } = useStore()
+  const { fetchInvites } = useApp()
 
   useEffect(() => {
-    const unsub: Unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubAuth: Unsubscribe = onAuthStateChanged(auth, (user) => {
       setLoginState(!!user)
     })
 
-    return () => unsub()
+    // let unsub: Unsubscribe | undefined
+    // fetchInvites(setLoading).then((res) => {
+    //   unsub = res
+    // })
+
+    return () => unsubAuth()
   }, [])
 
   if (loader) return <AppLoader />
