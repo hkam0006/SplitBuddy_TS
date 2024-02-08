@@ -27,7 +27,6 @@ const CreateGroupModal = ({ onClose }: CreateGroupModal) => {
   async function handleSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     try {
       await createGroup(groupName, currency)
-      console.log(groups)
       onClose(event)
     } catch (err) {
       console.log(err)
