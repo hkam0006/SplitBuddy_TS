@@ -52,8 +52,8 @@ const InviteCard = ({ groupName, senderEmail, senderId }: InviteCardProps) => {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={handleClose}>Accept</MenuItem>
-              <MenuItem color="red" onClick={handleClose}>Decline</MenuItem>
+              <MenuItem sx={{ color: "#43a047" }} onClick={handleClose}>Accept</MenuItem>
+              <MenuItem sx={{ color: "#f44336" }} onClick={handleClose}>Decline</MenuItem>
             </Menu>
           </Box>
         </Stack>
