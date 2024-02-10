@@ -2,13 +2,25 @@ import { Box, Button, Dialog, FormControl, InputAdornment, InputLabel, Select, S
 import ModalHeader from "./ModalHeader"
 import { useState } from "react"
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import useApp, { GroupObject } from "./hooks/useApp";
 
 type AddExpenseModalProps = {
-  onClose: React.MouseEventHandler<HTMLButtonElement>
+  onClose: React.MouseEventHandler<HTMLButtonElement>,
+  group: GroupObject
 }
 
-const AddExpenseModal = ({ onClose }: AddExpenseModalProps) => {
+const AddExpenseModal = ({ onClose, group }: AddExpenseModalProps) => {
+
+  const { splitExpense } = useApp()
+
   const [labelName, setLabelName] = useState<string>("")
+  const [expenseAmount, setExpenseAmount] = useState<number>(0)
+
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    splitExpense(group, expenseAmount, labelName)
+    onClose(event)
+  }
+
   return (
     <Dialog open fullWidth maxWidth='xs' onClose={onClose}>
       <Stack p={3} spacing={2}>
@@ -16,8 +28,10 @@ const AddExpenseModal = ({ onClose }: AddExpenseModalProps) => {
         <TextField label='Label' onChange={(e) => setLabelName(e.target.value)} />
         <TextField
           id="input-with-icon-textfield"
-          label="Amount"
+          label="Amount you paid"
           type="number"
+          value={expenseAmount}
+          onChange={(e) => setExpenseAmount(Number(e.target.value))}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -29,7 +43,8 @@ const AddExpenseModal = ({ onClose }: AddExpenseModalProps) => {
         />
         <Button
           variant='contained'
-        // onClick={(e) => handleSubmit(e)}
+          disabled={expenseAmount <= 0}
+          onClick={(e) => handleSubmit(e)}
         >
           Split Equally
         </Button>

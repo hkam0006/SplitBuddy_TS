@@ -148,6 +148,30 @@ const useApp = () => {
     }
   }
 
+  async function splitExpense(group: GroupObject, amount: number, label: string) {
+    if (!currentUser) return
+    const splitBy = group.members.length
+    const debted = Number((amount / splitBy).toFixed(2))
+    const membersCopy = group.members.filter(member => member != currentUser.uid)
+    const newTransactions = []
+    for (let i = 0; i < membersCopy.length; i++) {
+      newTransactions.push({
+        label: label,
+        amount: debted,
+        date: Timestamp.now(),
+        debtor: membersCopy[i],
+        debtee: currentUser.uid
+      })
+    }
+    try {
+      await updateDoc(doc(db, `groups/${group.id}`), {
+        transactions: [...newTransactions, ...group.transactions]
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   async function fetchInvites(setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
     if (!currentUser) return
     const documentRef = doc(db, `/users/${currentUser.email}`)
@@ -231,7 +255,8 @@ const useApp = () => {
     findUser,
     sendInvites,
     acceptInvite,
-    declineInvite
+    declineInvite,
+    splitExpense
   }
 }
 

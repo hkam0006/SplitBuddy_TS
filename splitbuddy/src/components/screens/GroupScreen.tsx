@@ -31,20 +31,6 @@ export const monthMap: { [number: number]: string } = {
   11: "Dec",
 }
 
-const placeholderTransactions: ExpenseType[] = [
-  { amount: 50, date: "Now", debtor: "Sonny", debtee: "Rachel", label: "Hai Di Lao" },
-  { amount: 40, date: "Now", debtor: "Rachel", debtee: "Sonny", label: "Electricity" },
-  { amount: 90, date: "Now", debtor: "Sonny", debtee: "Rachel", label: "Water Bill" },
-  { amount: 100, date: "Now", debtor: "Rachel", debtee: "Sonny", label: "Deez Nutz" },
-]
-
-const placeholderSettled: ExpenseType[] = [
-  { amount: 50, date: "Now", debtor: "Sonny", debtee: "Rachel", label: "Hai Di Lao" },
-  { amount: 40, date: "Now", debtor: "Rachel", debtee: "Sonny", label: "Electricity" },
-  { amount: 90, date: "Now", debtor: "Sonny", debtee: "Rachel", label: "Water Bill" },
-  { amount: 100, date: "Now", debtor: "Rachel", debtee: "Sonny", label: "Dragon Hotpot" },
-]
-
 const GroupScreen = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [group, setGroup] = useState<GroupObject | undefined>()
@@ -112,7 +98,7 @@ const GroupScreen = () => {
         </Toolbar>
       </AppBar>
 
-      {addExpenseModal && <AddExpenseModal onClose={() => setExpenseModal(false)} />}
+      {addExpenseModal && <AddExpenseModal onClose={() => setExpenseModal(false)} group={group} />}
       {inviteMembersModal && <InviteMembersModal groupId={group.id} groupName={group.name} onClose={() => setInviteMembersModal(false)} />}
 
       <Container>
