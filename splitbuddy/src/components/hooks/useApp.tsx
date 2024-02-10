@@ -1,8 +1,7 @@
-import { addDoc, collection, doc, setDoc, updateDoc, serverTimestamp, FieldValue, query, where, orderBy, getDoc, getDocs, onSnapshot, Timestamp, Unsubscribe } from "firebase/firestore"
+import { addDoc, collection, doc, setDoc, query, where, orderBy, getDoc, getDocs, onSnapshot, Timestamp, Unsubscribe, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"
 import useStore from "../../store"
 import { db } from "../../firebase"
 import { getAuth } from "firebase/auth"
-import { StringMappingType } from "typescript"
 
 export type CurrencyType = "USD" | "AUD" | "EUR" | "YEN" | "WON" | "HKD"
 
@@ -19,7 +18,9 @@ export type GroupObject = {
 
 export type InviteProps = {
   senderEmail: string,
-  senderId: string
+  senderId: string,
+  groupName: string
+  groupId: string
 }
 
 export type ExpenseType = {
@@ -47,6 +48,77 @@ const useApp = () => {
         invites: []
       }
       await setDoc(userDocRef, newUserDoc)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function findUser(email: string) {
+    const userDocRef = doc(db, `users/${email}`)
+    try {
+      const doc = await getDoc(userDocRef)
+      if (doc.exists()) {
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  }
+
+  async function declineInvite(inviteToDecline: InviteProps) {
+    if (!currentUser) return
+    const docRef = doc(db, `users/${currentUser.email}`)
+    try {
+      await updateDoc(docRef, {
+        invites: arrayRemove(inviteToDecline)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function acceptInvite(inviteToAccept: InviteProps) {
+    if (!currentUser) return
+    const docRef = doc(db, `users/${currentUser.email}`)
+    try {
+      await updateDoc(docRef, {
+        invites: arrayRemove(inviteToAccept)
+      })
+      await updateDoc(doc(db, `groups/${inviteToAccept.groupId}`), {
+        members: arrayUnion(currentUser.uid)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function sendInvite(email: string, groupName: string, groupId: string) {
+    const docRef = doc(db, `users/${email}`)
+    if (!currentUser) return
+    try {
+      await updateDoc(docRef, {
+        invites: arrayUnion({
+          senderEmail: currentUser.email,
+          senderId: currentUser.uid,
+          groupName: groupName,
+          groupId: groupId
+        })
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function sendInvites(inviteList: string[], groupName: string, groupId: string) {
+    const promises: Promise<any>[] = []
+    try {
+      for (let i = 0; i < inviteList.length; i++) {
+        promises.push(sendInvite(inviteList[i], groupName, groupId))
+      }
+      await Promise.all(promises)
     } catch (err) {
       console.log(err)
     }
@@ -96,7 +168,9 @@ const useApp = () => {
   async function fetchSingleGroup(
     groupId: string,
     setGroup: React.Dispatch<React.SetStateAction<GroupObject | undefined>>,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setSettled: React.Dispatch<React.SetStateAction<ExpenseType[]>>,
+    setUnsettled: React.Dispatch<React.SetStateAction<ExpenseType[]>>) {
     if (!currentUser) return
     const documentRef = doc(db, `groups/${groupId}`)
     try {
@@ -108,6 +182,8 @@ const useApp = () => {
           }
           const finalDoc = updatedDoc as GroupObject
           setGroup(finalDoc)
+          setSettled(finalDoc.history)
+          setUnsettled(finalDoc.transactions)
           setLoading(false)
         }
       })
@@ -151,7 +227,11 @@ const useApp = () => {
     createGroup,
     fetchGroups,
     fetchInvites,
-    fetchSingleGroup
+    fetchSingleGroup,
+    findUser,
+    sendInvites,
+    acceptInvite,
+    declineInvite
   }
 }
 

@@ -1,18 +1,23 @@
 import { Box, Button, Grid, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material"
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useState } from "react";
+import useApp, { InviteProps } from "./hooks/useApp";
 
 
 type InviteCardProps = {
   groupName: string,
   senderEmail: string,
-  senderId: string
+  senderId: string,
+  inviteObject: InviteProps
 }
 
-const InviteCard = ({ groupName, senderEmail, senderId }: InviteCardProps) => {
+const InviteCard = ({ groupName, senderEmail, inviteObject }: InviteCardProps) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const { declineInvite, acceptInvite } = useApp()
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -26,7 +31,7 @@ const InviteCard = ({ groupName, senderEmail, senderId }: InviteCardProps) => {
         <Stack direction='row' justifyContent='space-between' alignItems='center' >
           <Box>
             <Typography variant="body2" fontWeight={400} textOverflow='ellipsis'>
-              {`${senderEmail} has invited you to join asdasdasdasdasdas '${groupName}'. `}
+              {`${senderEmail} has invited you to join '${groupName}'. `}
             </Typography>
           </Box>
         </Stack>
@@ -52,8 +57,8 @@ const InviteCard = ({ groupName, senderEmail, senderId }: InviteCardProps) => {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem sx={{ color: "#43a047" }} onClick={handleClose}>Accept</MenuItem>
-              <MenuItem sx={{ color: "#f44336" }} onClick={handleClose}>Decline</MenuItem>
+              <MenuItem sx={{ color: "#43a047" }} onClick={() => acceptInvite(inviteObject)}>Accept</MenuItem>
+              <MenuItem sx={{ color: "#f44336" }} onClick={() => declineInvite(inviteObject)}>Decline</MenuItem>
             </Menu>
           </Box>
         </Stack>
