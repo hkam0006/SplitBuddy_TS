@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import useStore from "../../store";
 import useApp, { GroupObject, InviteProps } from "../hooks/useApp";
-import AppLoader from "../utils/AppLoader";
 import { AppBar, Grid, IconButton, Stack, Toolbar, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InviteCard from "../InviteCard";
 import { useNavigate } from "react-router-dom";
 import { Unsubscribe } from "firebase/firestore";
+import AppLoader from "../utils/AppLoader";
 
 const InvitesScreen: React.FC = () => {
-  const { invites, areInvitesFetched } = useStore()
+  const { invites } = useStore()
   const { fetchInvites } = useApp()
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -52,8 +52,14 @@ const InvitesScreen: React.FC = () => {
 
       <Stack my={3} mx={3} alignItems='center'>
         <Grid container spacing={{ sm: 4, xs: 2 }}>
-          {invites.map((inv, index) =>
-            <InviteCard key={index} senderEmail={inv.senderEmail} senderId={inv.senderId} groupName="bruh" />
+          {invites.map((inv) =>
+            <InviteCard
+              key={inv.groupId}
+              senderEmail={inv.senderEmail}
+              senderId={inv.senderId}
+              groupName={inv.groupName}
+              inviteObject={inv}
+            />
           )}
         </Grid>
       </Stack>
