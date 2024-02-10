@@ -39,7 +39,7 @@ const CreateGroupModal = ({ onClose }: CreateGroupModal) => {
   return (
     <Dialog open fullWidth maxWidth='xs' onClose={onClose}>
       <Stack p={3} spacing={2}>
-        <ModalHeader onClose={onClose} />
+        <ModalHeader onClose={onClose} title="Add Expense Group" />
         <TextField label='Group Name' onChange={(e) => setGroupName(e.target.value)} />
         <FormControl>
           <InputLabel>Currency</InputLabel>
