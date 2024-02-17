@@ -19,7 +19,7 @@
     }
   ],
   "hosting": {
-    "public": "public",
+    "public": "./splitbuddy/build",
     "ignore": [
       "firebase.json",
       "**/.*",
