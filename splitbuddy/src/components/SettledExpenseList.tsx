@@ -15,7 +15,7 @@ type SettleExpenseListProps = {
 const SettleExpenseList = ({ list, currency }: SettleExpenseListProps) => {
   const isXs = useMediaQuery(theme.breakpoints.only("xs"))
   const [showMore, setShowMore] = useState<boolean>(!isXs)
-  const textColor = "GrayText"
+  const textColor = "#808080"
 
   function showItems(list: ExpenseType[], show: boolean) {
     if (!show) return <></>
@@ -49,7 +49,7 @@ const SettleExpenseList = ({ list, currency }: SettleExpenseListProps) => {
     <Grid item xs={12} sm={6} mb={10}>
       <Stack bgcolor="background.paper" borderRadius={2}>
         <Stack p={2} direction='row' justifyContent='space-between' alignItems='center' bgcolor='background.paper' borderRadius={2}>
-          <Typography color={textColor} variant="h5">Settled Expenses</Typography>
+          <Typography variant="h5">Settled Expenses</Typography>
           {list.length > 0 ? <IconButton size="small" onClick={() => setShowMore(old => !old)} color="primary">{showMore ? <ExpandMoreIcon /> : < KeyboardArrowRightIcon />}</IconButton> : <></>}
         </Stack>
         {list.length > 0
