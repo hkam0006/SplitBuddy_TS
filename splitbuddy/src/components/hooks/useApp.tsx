@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, setDoc, query, where, orderBy, getDoc, getDocs, onSnapshot, Timestamp, Unsubscribe, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"
+import { addDoc, collection, doc, setDoc, query, where, orderBy, getDoc, getDocs, onSnapshot, Timestamp, Unsubscribe, updateDoc, arrayUnion, arrayRemove, FieldValue } from "firebase/firestore"
 import useStore from "../../store"
 import { db } from "../../firebase"
 import { getAuth } from "firebase/auth"
@@ -26,7 +26,7 @@ export type InviteProps = {
 export type ExpenseType = {
   label: string,
   amount: number,
-  date: string,
+  date: Timestamp,
   debtor: string,
   debtee: string
 }
@@ -202,16 +202,26 @@ const useApp = () => {
         if (doc.exists()) {
           const updatedDoc = {
             ...doc.data(),
-            createdAt: doc.data().createdAt.toDate().toLocaleString('en-UK')
           }
           const finalDoc = updatedDoc as GroupObject
           setGroup(finalDoc)
-          setSettled(finalDoc.history)
-          setUnsettled(finalDoc.transactions)
+          setSettled(finalDoc.history.filter((trn) => trn.debtee == currentUser.uid || trn.debtor == currentUser.uid))
+          setUnsettled(finalDoc.transactions.filter((trn) => trn.debtee == currentUser.uid || trn.debtor == currentUser.uid))
           setLoading(false)
         }
       })
       return unsub
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function settleUp(group: GroupObject) {
+    try {
+      await updateDoc(doc(db, `groups/${group.id}`), {
+        transactions: [],
+        history: [...group.transactions, ...group.history]
+      })
     } catch (err) {
       console.log(err)
     }
@@ -256,7 +266,8 @@ const useApp = () => {
     sendInvites,
     acceptInvite,
     declineInvite,
-    splitExpense
+    splitExpense,
+    settleUp
   }
 }
 
