@@ -63,14 +63,6 @@ const GroupScreen = () => {
 
   const isXs = useMediaQuery(theme.breakpoints.only('xs'))
 
-  function handleSettleUpAction() {
-    const dClone = structuredClone(unsettled)
-    setSettled((old) => {
-      return [...dClone, ...old]
-    })
-    setUnsettled([])
-  }
-
   if (!group) return <ErrorGroup />
 
   if (loading || !group) return <AppLoader />
@@ -105,12 +97,11 @@ const GroupScreen = () => {
         <Stack mt={3}>
           <Grid container spacing={3}>
             <ExpenseList
+              group={group}
               listTitle="Expenses"
               list={unsettled}
               currency={group.currency}
               emptyMsg="Congrats! You are all settled."
-              hasActionButton
-              handleAction={handleSettleUpAction}
             />
             <SettleExpenseList
               list={settled}
