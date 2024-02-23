@@ -56,7 +56,7 @@ const SettleExpenseList = ({ list, currency }: SettleExpenseListProps) => {
         {list.length > 0
           ? showItems(list, showMore)
           : <Stack p={3} alignItems='center'>
-            <Typography textAlign='center' variant='h6' color="GrayText">No expense history found.</Typography>
+            <Typography textAlign='center' variant='h6' color={textColor}>No expense history found.</Typography>
           </Stack>}
       </Stack>
     </Grid>
