@@ -32,7 +32,7 @@ const GroupCard = ({ id, name, transactions, currency }: GroupCardProps) => {
       return "You are all settled"
     } else {
       const verbText = amount < 0 ? "borrowed" : "lent"
-      return `You ${verbText} ${amount} ${currency}`
+      return `You ${verbText} ${Math.abs(amount)} ${currency}`
     }
   }
 
