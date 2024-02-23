@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, setDoc, query, where, orderBy, getDoc, getDocs, onSnapshot, Timestamp, Unsubscribe, updateDoc, arrayUnion, arrayRemove, FieldValue } from "firebase/firestore"
+import { addDoc, collection, doc, setDoc, query, where, orderBy, getDoc, getDocs, onSnapshot, Timestamp, Unsubscribe, updateDoc, arrayUnion, arrayRemove, FieldValue, deleteDoc } from "firebase/firestore"
 import useStore from "../../store"
 import { db } from "../../firebase"
 import { getAuth } from "firebase/auth"
@@ -51,6 +51,20 @@ const useApp = () => {
     } catch (err) {
       console.log(err)
     }
+  }
+
+  async function deleteGroup(groupId: string) {
+    if (!groupId) {
+      return false
+    }
+    try {
+      const groupDocRef = doc(db, `/groups/${groupId}`)
+      await deleteDoc(groupDocRef)
+      return true
+    } catch (err) {
+      console.log(err)
+    }
+    return false
   }
 
   async function findUser(email: string) {
@@ -208,6 +222,8 @@ const useApp = () => {
           setSettled(finalDoc.history.filter((trn) => trn.debtee == currentUser.uid || trn.debtor == currentUser.uid))
           setUnsettled(finalDoc.transactions.filter((trn) => trn.debtee == currentUser.uid || trn.debtor == currentUser.uid))
           setLoading(false)
+        } else {
+          setGroup(undefined)
         }
       })
       return unsub
@@ -267,7 +283,8 @@ const useApp = () => {
     acceptInvite,
     declineInvite,
     splitExpense,
-    settleUp
+    settleUp,
+    deleteGroup
   }
 }
 

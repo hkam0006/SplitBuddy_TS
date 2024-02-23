@@ -15,6 +15,8 @@ import ErrorGroup from "../ErrorGroup";
 import AddExpenseModal from "../AddExpenseModal";
 import InviteMembersModal from "../InviteMembersModal";
 import AppLoader from "../utils/AppLoader";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { auth } from "../../firebase";
 
 export const monthMap: { [number: number]: string } = {
   0: "Jan",
@@ -37,7 +39,7 @@ const GroupScreen = () => {
   const { uid: groupId } = useParams()
   const navigate = useNavigate()
   const { groups } = useStore()
-  const { fetchSingleGroup } = useApp()
+  const { fetchSingleGroup, deleteGroup } = useApp()
 
   const [unsettled, setUnsettled] = useState<ExpenseType[]>([])
   const [settled, setSettled] = useState<ExpenseType[]>([])
@@ -65,7 +67,36 @@ const GroupScreen = () => {
 
   if (!group) return <ErrorGroup />
 
-  if (loading || !group) return <AppLoader />
+  if (loading || !auth.currentUser) return <AppLoader />
+
+  function handleDeleteGroup() {
+    if (!groupId) {
+      return
+    }
+    deleteGroup(groupId).then((success) => {
+      if (success) navigate("/dashboard")
+    })
+  }
+
+  function deleteButton(): JSX.Element {
+    if (auth.currentUser?.uid === group?.owner) {
+      return !isXs ?
+        <Button
+          startIcon={<DeleteForeverIcon />}
+          variant='contained'
+          color="error"
+          onClick={() => handleDeleteGroup()}
+        >
+          Delete Group
+        </Button> : <IconButton
+          color="error"
+        >
+          <DeleteForeverIcon />
+        </IconButton>
+    } else {
+      return <></>
+    }
+  }
 
   return (
     <>
@@ -86,6 +117,7 @@ const GroupScreen = () => {
           </Typography>
           <Stack direction='row' spacing={2}>
             {!isXs ? <Button onClick={() => setInviteMembersModal(true)} variant="contained" startIcon={<GroupAddIcon />}>Invite</Button> : <IconButton color="primary" onClick={() => setInviteMembersModal(true)}><GroupAddIcon /></IconButton>}
+            {deleteButton()}
           </Stack>
         </Toolbar>
       </AppBar>
