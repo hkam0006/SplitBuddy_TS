@@ -6,6 +6,7 @@ import theme from "../theme/theme"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Component, useState } from "react"
+import { auth } from "../firebase"
 
 type SettleExpenseListProps = {
   list: ExpenseType[],
@@ -26,13 +27,13 @@ const SettleExpenseList = ({ list, currency }: SettleExpenseListProps) => {
         <Stack p={2} justifyContent='space-between' direction='row' alignItems='center'>
           <Stack direction='row' spacing={2} alignItems='center'>
             <Stack alignItems='center'>
-              <Typography variant="body2" color={textColor}>{monthMap[Timestamp.now().toDate().getMonth()]}</Typography>
-              <Typography variant="body1" color={textColor}>{Timestamp.now().toDate().getDate()}</Typography>
+              <Typography variant="body2" color={textColor}>{monthMap[trn.date.toDate().getMonth()]}</Typography>
+              <Typography variant="body1" color={textColor}>{trn.date.toDate().getDate()}</Typography>
             </Stack>
             <Typography color={textColor} textOverflow="ellipsis" overflow='hidden'> {trn.label}</Typography>
           </Stack>
           <Stack alignItems='end'>
-            <Typography variant="body2" color={textColor}>You are owed</Typography>
+            <Typography variant="body2" color={textColor}>{trn.debtor == auth.currentUser?.uid ? "You borrowed" : "You lent"}</Typography>
             <Stack direction='row' spacing={0.5} alignItems='baseline'>
               <Typography variant="h5" color={textColor}>{trn.amount} </Typography>
               <Typography variant="body2" color={textColor}> {currency}</Typography>

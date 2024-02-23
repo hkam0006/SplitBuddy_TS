@@ -41,7 +41,7 @@ const ExpenseList = ({ listTitle, list, currency, emptyMsg, group }: ExpenseList
                 <Typography color={textColor} textOverflow="ellipsis" overflow='hidden'> {trn.label}</Typography>
               </Stack>
               <Stack alignItems='end'>
-                <Typography variant="body2" color={trn.debtor == auth.currentUser?.uid ? redText : greenText}>{trn.debtor == auth.currentUser?.uid ? "You owe" : "You are owed"}</Typography>
+                <Typography variant="body2" color={trn.debtor == auth.currentUser?.uid ? redText : greenText}>{trn.debtor == auth.currentUser?.uid ? "You borrowed" : "You lent"}</Typography>
                 <Stack direction='row' spacing={0.5} alignItems='baseline'>
                   <Typography variant="h5" color={trn.debtor == auth.currentUser?.uid ? redText : greenText}>{trn.amount} </Typography>
                   <Typography variant="body2" color={trn.debtor == auth.currentUser?.uid ? redText : greenText}> {currency}</Typography>
