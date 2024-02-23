@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
           {filteredGroups.length > 0 ?
             <Grid container spacing={{ sm: 4, xs: 2 }} sx={{ mb: 10 }}>
               {filteredGroups.map((grp) =>
-                <GroupCard name={grp.name} id={grp.id} key={grp.id} />
+                <GroupCard name={grp.name} id={grp.id} key={grp.id} transactions={grp.transactions} currency={grp.currency} />
               )}
             </Grid> : <Container sx={{ mt: 20 }}>
               <Stack textAlign='center' alignItems='center' >
