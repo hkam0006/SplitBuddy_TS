@@ -90,6 +90,7 @@ const GroupScreen = () => {
           Delete Group
         </Button> : <IconButton
           color="error"
+          onClick={() => handleDeleteGroup()}
         >
           <DeleteForeverIcon />
         </IconButton>
