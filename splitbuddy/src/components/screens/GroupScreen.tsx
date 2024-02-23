@@ -85,7 +85,7 @@ const GroupScreen = () => {
             {group.name}
           </Typography>
           <Stack direction='row' spacing={2}>
-            {!isXs ? <Button onClick={() => setInviteMembersModal(true)} variant="contained" startIcon={<GroupAddIcon />}>Invite Members</Button> : <IconButton color="primary" onClick={() => setInviteMembersModal(true)}><GroupAddIcon /></IconButton>}
+            {!isXs ? <Button onClick={() => setInviteMembersModal(true)} variant="contained" startIcon={<GroupAddIcon />}>Invite</Button> : <IconButton color="primary" onClick={() => setInviteMembersModal(true)}><GroupAddIcon /></IconButton>}
           </Stack>
         </Toolbar>
       </AppBar>
