@@ -1,6 +1,6 @@
-import { addDoc, collection, doc, setDoc, query, where, orderBy, getDoc, getDocs, onSnapshot, Timestamp, Unsubscribe, updateDoc, arrayUnion, arrayRemove, FieldValue, deleteDoc } from "firebase/firestore"
+import { collection, doc, setDoc, query, where, orderBy, getDoc, onSnapshot, Timestamp, Unsubscribe, updateDoc, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore"
 import useStore from "../../store"
-import { db } from "../../firebase"
+import { auth, db } from "../../firebase"
 import { getAuth } from "firebase/auth"
 
 export type CurrencyType = "USD" | "AUD" | "EUR" | "YEN" | "WON" | "HKD"
@@ -298,6 +298,24 @@ const useApp = () => {
     }
   }
 
+  async function leaveGroup(groupId: string) {
+    if (!auth.currentUser) {
+      return
+    }
+    const docRef = doc(db, `/groups/${groupId}`)
+    try {
+      await updateDoc(docRef, {
+        members: arrayRemove(auth.currentUser.uid)
+      })
+      setToaster("You have left the group", "success")
+      return true
+    } catch (err) {
+      console.log(err)
+      setToaster("Error leaving group", "error")
+    }
+    return false
+  }
+
   return {
     createUserDoc,
     createGroup,
@@ -311,7 +329,8 @@ const useApp = () => {
     splitExpense,
     settleUp,
     deleteGroup,
-    deleteExpense
+    deleteExpense,
+    leaveGroup
   }
 }
 
