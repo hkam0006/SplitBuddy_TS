@@ -12,7 +12,7 @@ const SnackbarManager = () => {
     <Snackbar
       message={toasterMsg}
       open={!!toasterMsg}
-      autoHideDuration={5000}
+      autoHideDuration={2500}
       onClose={() => setToaster("", "")}
     >
       {!!toasterSeverity ? <Alert onClose={() => setToaster("", "")} severity={toasterSeverity} sx={{ width: '100%', textTransform: "capitalize" }} >
