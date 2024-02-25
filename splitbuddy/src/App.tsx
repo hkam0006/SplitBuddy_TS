@@ -15,6 +15,7 @@ import AppLoader from "./components/utils/AppLoader";
 import GroupScreen from "./components/screens/GroupScreen";
 import InvitesScreen from "./components/screens/InvitesScreen";
 import useApp from "./components/hooks/useApp";
+import SnackbarManager from "./components/utils/SnackbarManager";
 
 
 
@@ -37,6 +38,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
+        <SnackbarManager />
         <BrowserRouter>
           <Routes>
             <Route element={<PublicRoute Component={AuthScreen} />} path='/' />

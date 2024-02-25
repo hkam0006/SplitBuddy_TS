@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { GroupObject, InviteProps } from './components/hooks/useApp'
+import { AlertColor, AlertPropsColorOverrides } from '@mui/material'
 
+type SeverityProps = "success" | "error" | "info" | ""
 
 type AppStoreProps = {
     loader: boolean,
@@ -11,7 +13,10 @@ type AppStoreProps = {
     setGroups: Function,
     invites: InviteProps[],
     areInvitesFetched: boolean,
-    setInvites: Function
+    setInvites: Function,
+    setToaster: Function,
+    toasterMsg: string,
+    toasterSeverity: SeverityProps
 }
 
 const useStore = create<AppStoreProps>((set) => ({
@@ -32,6 +37,12 @@ const useStore = create<AppStoreProps>((set) => ({
     setInvites: (invites: InviteProps[]) => set({
         invites: invites,
         areInvitesFetched: true
+    }),
+    toasterMsg: "",
+    toasterSeverity: "",
+    setToaster: (message: string, severity: SeverityProps) => set({
+        toasterMsg: message,
+        toasterSeverity: severity
     })
 }))
 
