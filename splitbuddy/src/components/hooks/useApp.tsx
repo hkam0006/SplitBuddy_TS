@@ -37,7 +37,7 @@ type SplitUser = {
 }
 
 const useApp = () => {
-  const { loader, groups, setGroups, setInvites } = useStore()
+  const { loader, groups, setGroups, setInvites, setToaster } = useStore()
   const { currentUser } = getAuth()
 
   async function createUserDoc(uid: string, email: string) {
@@ -55,15 +55,18 @@ const useApp = () => {
 
   async function deleteGroup(groupId: string) {
     if (!groupId) {
+      setToaster("Error deleting group", "error")
       return false
     }
     try {
       const groupDocRef = doc(db, `/groups/${groupId}`)
       await deleteDoc(groupDocRef)
+      setToaster("Group deleted successfully", "success")
       return true
     } catch (err) {
       console.log(err)
     }
+    setToaster("Error deleting group", "error")
     return false
   }
 
@@ -104,8 +107,10 @@ const useApp = () => {
       await updateDoc(doc(db, `groups/${inviteToAccept.groupId}`), {
         members: arrayUnion(currentUser.uid)
       })
+      setToaster(`Invite to "${inviteToAccept.groupName}" accepted!`, "success")
     } catch (err) {
       console.log(err)
+      setToaster("Error accepting invite", "error")
     }
   }
 
@@ -123,6 +128,7 @@ const useApp = () => {
       })
     } catch (err) {
       console.log(err)
+      setToaster(`Error sending invite`, "error")
     }
   }
 
@@ -133,8 +139,10 @@ const useApp = () => {
         promises.push(sendInvite(inviteList[i], groupName, groupId))
       }
       await Promise.all(promises)
+      setToaster(`Invites sent!`, "success")
     } catch (err) {
       console.log(err)
+      setToaster(`Error sending invites`, "error")
     }
   }
 
@@ -156,8 +164,9 @@ const useApp = () => {
         transactions: []
       }
       await setDoc(groupsCollectionRef, newExpenseGroup)
-
+      setToaster(`Group created (${groupId})`, "success")
     } catch (err) {
+      setToaster(`Error creating group!. Try again later`, "error")
       console.log(err)
     }
   }
@@ -181,8 +190,10 @@ const useApp = () => {
       await updateDoc(doc(db, `groups/${group.id}`), {
         transactions: [...newTransactions, ...group.transactions]
       })
+      setToaster(`New Expense added!`, "success")
     } catch (err) {
       console.log(err)
+      setToaster(`Had trouble adding expense. Try again later!`, "error")
     }
   }
 
@@ -238,8 +249,10 @@ const useApp = () => {
       await updateDoc(docRef, {
         transactions: arrayRemove(expense)
       })
+      setToaster(`Expense deleted`, "success")
     } catch (err) {
       console.log(err)
+      setToaster(`Having trouble deleting expense`, "error")
     }
   }
 
@@ -249,8 +262,10 @@ const useApp = () => {
         transactions: [],
         history: [...group.transactions, ...group.history]
       })
+      setToaster(`Expenses Settled!`, "success")
     } catch (err) {
       console.log(err)
+      setToaster(`Having trouble settling expenses. Try again later`, "success")
     }
   }
 
