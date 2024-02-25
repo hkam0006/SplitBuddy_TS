@@ -4,6 +4,7 @@ import useApp, { ExpenseType, GroupObject } from "./hooks/useApp"
 import EditIcon from '@mui/icons-material/Edit';
 import React, { useState } from "react";
 import { auth } from "../firebase";
+import { Timestamp } from "firebase/firestore";
 
 type EditExpenseModalProps = {
   expense: ExpenseType | undefined,
@@ -14,13 +15,21 @@ type EditExpenseModalProps = {
 
 const EditExpenseModal = ({ onClose, expense, group, onDelete }: EditExpenseModalProps) => {
 
+  const { updateTransactions } = useApp()
+
   const [expenseLabel, setExpenseLabel] = useState<string>(expense ? expense.label : "")
   const [expenseAmount, setExpenseAmount] = useState<number>(expense ? expense.amount : 0)
 
   const [editMode, setEditMode] = useState<boolean>(false)
 
   function handleEditButton(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    if (!expense || !expenseLabel || !expenseAmount) return
     if (editMode) {
+      expense.amount = expenseAmount
+      expense.label = expenseLabel
+      const newTransactions = group.transactions.filter((exp: ExpenseType) => exp.id != expense.id)
+      newTransactions.push(expense)
+      updateTransactions(group.id, newTransactions)
       onClose(event)
     } else {
       setEditMode(true)
@@ -30,8 +39,6 @@ const EditExpenseModal = ({ onClose, expense, group, onDelete }: EditExpenseModa
   if (!expense || !auth.currentUser) {
     return <></>
   }
-
-
 
   return <Dialog open fullWidth maxWidth='xs' onClose={onClose}>
     <Stack p={3} spacing={2}>
@@ -45,7 +52,7 @@ const EditExpenseModal = ({ onClose, expense, group, onDelete }: EditExpenseModa
           onChange={(e) => setExpenseLabel(e.target.value)}
         />
         <TextField
-          label="Expense Amount"
+          label={`Expense Amount (${group.currency})`}
           type="number"
           value={expenseAmount}
           onChange={(e) => setExpenseAmount(Number(e.target.value))}

@@ -24,6 +24,7 @@ export type InviteProps = {
 }
 
 export type ExpenseType = {
+  id: string,
   label: string,
   amount: number,
   date: Timestamp,
@@ -178,7 +179,9 @@ const useApp = () => {
     const membersCopy = group.members.filter(member => member != currentUser.uid)
     const newTransactions = []
     for (let i = 0; i < membersCopy.length; i++) {
+      const newId = crypto.randomUUID()
       newTransactions.push({
+        id: newId,
         label: label,
         amount: debted,
         date: Timestamp.now(),
@@ -316,6 +319,24 @@ const useApp = () => {
     return false
   }
 
+  async function updateTransactions(groupId: string, newTransactions: ExpenseType[]) {
+    if (!auth.currentUser) {
+      return
+    }
+
+    const docRef = doc(db, `/groups/${groupId}`)
+
+    try {
+      await updateDoc(docRef, {
+        transactions: newTransactions
+      })
+      setToaster("Changes applied", "success")
+    } catch (err) {
+      setToaster("Error occured trying to update transactions", "error")
+      console.log(err)
+    }
+  }
+
   return {
     createUserDoc,
     createGroup,
@@ -330,7 +351,8 @@ const useApp = () => {
     settleUp,
     deleteGroup,
     deleteExpense,
-    leaveGroup
+    leaveGroup,
+    updateTransactions
   }
 }
 
