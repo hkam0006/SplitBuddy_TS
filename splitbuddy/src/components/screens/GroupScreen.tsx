@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Container, Divider, Fab, Grid, IconButton, Stack, Toolbar, Typography, useMediaQuery } from "@mui/material"
+import { AppBar, Box, Button, Container, Divider, Fab, Grid, IconButton, Stack, Toolbar, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import useApp, { ExpenseType, GroupObject } from "../hooks/useApp";
@@ -143,7 +143,13 @@ const GroupScreen = () => {
           </Grid>
         </Stack>
       </Container >
-      <Fab onClick={() => setExpenseModal(true)} color="primary" aria-label="Add expense" sx={{ position: "fixed", bottom: 20, right: 20 }}>
+      <Fab
+        onClick={() => setExpenseModal(true)}
+        color="primary"
+        aria-label="Add expense"
+        sx={{ position: "fixed", bottom: 20, right: 20 }}
+        disabled={group.members.length <= 1}
+      >
         <AddIcon />
       </Fab>
     </>
