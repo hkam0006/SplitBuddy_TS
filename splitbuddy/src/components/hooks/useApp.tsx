@@ -232,6 +232,17 @@ const useApp = () => {
     }
   }
 
+  async function deleteExpense(expense: ExpenseType, groupId: string) {
+    try {
+      const docRef = doc(db, `/groups/${groupId}`)
+      await updateDoc(docRef, {
+        transactions: arrayRemove(expense)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   async function settleUp(group: GroupObject) {
     try {
       await updateDoc(doc(db, `groups/${group.id}`), {
@@ -284,7 +295,8 @@ const useApp = () => {
     declineInvite,
     splitExpense,
     settleUp,
-    deleteGroup
+    deleteGroup,
+    deleteExpense
   }
 }
 
