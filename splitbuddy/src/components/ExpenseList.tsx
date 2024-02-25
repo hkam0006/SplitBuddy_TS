@@ -1,9 +1,6 @@
-import { Button, Divider, Grid, IconButton, Stack, Typography } from "@mui/material"
+import { Button, Grid, Stack, Typography } from "@mui/material"
 import useApp, { CurrencyType, ExpenseType, GroupObject } from "./hooks/useApp"
-import { Timestamp } from "firebase/firestore"
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
-import { monthMap } from "./screens/GroupScreen";
-import { auth } from "../firebase";
 import ExpenseCard from "./ExpenseCard";
 import EditExpenseModal from "./EditExpenseModal";
 import { useState } from "react";
@@ -38,7 +35,15 @@ const ExpenseList = ({ listTitle, list, currency, emptyMsg, group }: ExpenseList
 
   return (
     <>
-      {showModal ? <EditExpenseModal onClose={() => setShowModal(undefined)} expense={showModal} group={group} onDelete={() => handleShowModal()} /> : <></>}
+      {showModal ?
+        <EditExpenseModal
+          onClose={() => setShowModal(undefined)}
+          expense={showModal}
+          group={group}
+          onDelete={() => handleShowModal()}
+        /> :
+        <></>
+      }
       <Grid item xs={12} sm={6}>
         <Stack bgcolor="background.paper" borderRadius={2}>
           <Stack p={2} direction='row' justifyContent='space-between' alignItems='center' bgcolor='background.paper' borderRadius={2}>
