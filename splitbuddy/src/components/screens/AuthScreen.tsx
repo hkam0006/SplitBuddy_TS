@@ -7,6 +7,8 @@ import AppLoader from "../utils/AppLoader"
 import AppLogo from "../AppLogo"
 import theme from "../../theme/theme"
 import useApp from "../hooks/useApp"
+import useStore from "../../store"
+import { FirebaseError } from "firebase/app"
 
 type FormProps = {
   email: string,
@@ -24,6 +26,7 @@ const AuthScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { createUserDoc } = useApp()
+  const { setToaster } = useStore()
 
   const isXs: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
@@ -44,15 +47,18 @@ const AuthScreen: React.FC = () => {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, formData.email, formData.password)
+        setToaster("User Signed In!", "success")
       } else {
         await createUserWithEmailAndPassword(auth, formData.email, formData.password)
         if (auth.currentUser) {
           await createUserDoc(auth.currentUser.uid, formData.email)
         }
+        setToaster("User created!", "success")
       }
     } catch (err) {
       console.log(err)
       setIsLoading(false)
+      setToaster("User not found", "error")
     }
   }
 
