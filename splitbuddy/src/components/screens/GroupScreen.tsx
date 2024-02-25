@@ -1,11 +1,11 @@
-import { AppBar, Box, Button, Container, Divider, Fab, Grid, IconButton, Stack, Toolbar, Tooltip, Typography, useMediaQuery } from "@mui/material"
+import { AppBar, Button, Container, Fab, Grid, IconButton, Stack, Toolbar, Typography, useMediaQuery } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import useApp, { ExpenseType, GroupObject } from "../hooks/useApp";
 import useStore from "../../store";
 
 import { useEffect, useState } from "react";
-import { Timestamp, Unsubscribe } from "firebase/firestore";
+import { Unsubscribe } from "firebase/firestore";
 import ExpenseList from "../ExpenseList";
 import AddIcon from '@mui/icons-material/Add';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -44,9 +44,8 @@ const GroupScreen = () => {
 
   const [unsettled, setUnsettled] = useState<ExpenseType[]>([])
   const [settled, setSettled] = useState<ExpenseType[]>([])
-  const [addExpenseModal, setExpenseModal] = useState<boolean>(false)
-  const [inviteMembersModal, setInviteMembersModal] = useState<boolean>(false)
-
+  const [addExpenseModal, showAddExpenseModal] = useState<boolean>(false)
+  const [inviteMembersModal, showInviteMembersModal] = useState<boolean>(false)
 
   useEffect(() => {
     let unsub: Unsubscribe | undefined
@@ -142,14 +141,27 @@ const GroupScreen = () => {
             {group.name}
           </Typography>
           <Stack direction='row' spacing={2}>
-            {!isXs ? <Button onClick={() => setInviteMembersModal(true)} variant="contained" startIcon={<GroupAddIcon />}>Invite</Button> : <IconButton color="primary" onClick={() => setInviteMembersModal(true)}><GroupAddIcon /></IconButton>}
+            {!isXs ?
+              <Button
+                onClick={() => showInviteMembersModal(true)}
+                variant="contained"
+                startIcon={<GroupAddIcon />}>
+                Invite
+              </Button> :
+              <IconButton
+                color="primary"
+                onClick={() => showInviteMembersModal(true)}
+              >
+                <GroupAddIcon />
+              </IconButton>
+            }
             {deleteButton()}
           </Stack>
         </Toolbar>
       </AppBar>
 
-      {addExpenseModal && <AddExpenseModal onClose={() => setExpenseModal(false)} group={group} />}
-      {inviteMembersModal && <InviteMembersModal groupId={group.id} groupName={group.name} onClose={() => setInviteMembersModal(false)} />}
+      {addExpenseModal && <AddExpenseModal onClose={() => showAddExpenseModal(false)} group={group} />}
+      {inviteMembersModal && <InviteMembersModal groupId={group.id} groupName={group.name} onClose={() => showInviteMembersModal(false)} />}
 
       <Container>
         <Stack mt={3}>
@@ -169,7 +181,7 @@ const GroupScreen = () => {
         </Stack>
       </Container >
       <Fab
-        onClick={() => setExpenseModal(true)}
+        onClick={() => showAddExpenseModal(true)}
         color="primary"
         aria-label="Add expense"
         sx={{ position: "fixed", bottom: 20, right: 20 }}
