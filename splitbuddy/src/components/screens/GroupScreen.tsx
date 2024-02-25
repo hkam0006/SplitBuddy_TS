@@ -16,6 +16,7 @@ import AddExpenseModal from "../AddExpenseModal";
 import InviteMembersModal from "../InviteMembersModal";
 import AppLoader from "../utils/AppLoader";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import { auth } from "../../firebase";
 
 export const monthMap: { [number: number]: string } = {
@@ -39,7 +40,7 @@ const GroupScreen = () => {
   const { uid: groupId } = useParams()
   const navigate = useNavigate()
   const { groups } = useStore()
-  const { fetchSingleGroup, deleteGroup } = useApp()
+  const { fetchSingleGroup, deleteGroup, leaveGroup } = useApp()
 
   const [unsettled, setUnsettled] = useState<ExpenseType[]>([])
   const [settled, setSettled] = useState<ExpenseType[]>([])
@@ -70,11 +71,22 @@ const GroupScreen = () => {
   if (loading || !auth.currentUser) return <AppLoader />
 
   function handleDeleteGroup() {
-    if (!groupId) {
+    if (!groupId || !window.confirm("Are you sure you want to delete this group?")) {
       return
     }
     deleteGroup(groupId).then((success) => {
       if (success) navigate("/dashboard")
+    })
+  }
+
+  function handleLeaveGroup() {
+    if (!groupId || !window.confirm("Are you sure you want to leave this group?")) {
+      return
+    }
+    leaveGroup(groupId).then((success) => {
+      if (success) {
+        navigate("/dashboard")
+      }
     })
   }
 
@@ -95,7 +107,20 @@ const GroupScreen = () => {
           <DeleteForeverIcon />
         </IconButton>
     } else {
-      return <></>
+      return !isXs ?
+        <Button
+          startIcon={<GroupRemoveIcon />}
+          variant='contained'
+          color="error"
+          onClick={() => handleLeaveGroup()}
+        >
+          Leave Group
+        </Button> : <IconButton
+          color="error"
+          onClick={() => handleLeaveGroup()}
+        >
+          <GroupRemoveIcon />
+        </IconButton>
     }
   }
 
