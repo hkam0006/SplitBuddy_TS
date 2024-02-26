@@ -23,4 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 src/firebase.tsx
 
-/fb-emulator
+fb-emulator
+fb-emulator/auth_export
+fb-emulator/firestore_export
