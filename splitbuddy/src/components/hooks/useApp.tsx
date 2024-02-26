@@ -259,11 +259,17 @@ const useApp = () => {
     }
   }
 
-  async function settleUp(group: GroupObject) {
+  async function settleUp(group: GroupObject, settledExpenses: ExpenseType[]) {
+    const idArray: string[] = []
+    for (let i = 0; i < settledExpenses.length; i++) {
+      idArray.push(settledExpenses[i].id)
+    }
+    const remainingTransactions = group.transactions.filter((t) => !idArray.includes(t.id))
+    const leftOver = group.transactions.filter((t) => idArray.includes(t.id))
     try {
       await updateDoc(doc(db, `groups/${group.id}`), {
-        transactions: [],
-        history: [...group.transactions, ...group.history]
+        transactions: remainingTransactions,
+        history: [...leftOver, ...group.history]
       })
       setToaster(`Expenses Settled!`, "success")
     } catch (err) {
