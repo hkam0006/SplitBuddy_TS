@@ -64,8 +64,8 @@ node_modules/
 
 # dotenv environment variables file
 .env
-./splitbuddy/fb-emulator/auth_export/accounts.json
-./splitbuddy/fb-emulator/auth_export/accounts.json
-./splitbuddy/fb-emulator/firestore_export/firestore_export.overall_export_metadata
-./splitbuddy/fb-emulator/firestore_export/all_namespaces/all_kinds/all_namespaces_all_kinds.export_metadata
-./splitbuddy/fb-emulator/firestore_export/all_namespaces/all_kinds/output-0
+splitbuddy/fb-emulator/auth_export/accounts.json
+splitbuddy/fb-emulator/auth_export/accounts.json
+splitbuddy/fb-emulator/firestore_export/firestore_export.overall_export_metadata
+splitbuddy/fb-emulator/firestore_export/all_namespaces/all_kinds/all_namespaces_all_kinds.export_metadata
+splitbuddy/fb-emulator/firestore_export/all_namespaces/all_kinds/output-0
