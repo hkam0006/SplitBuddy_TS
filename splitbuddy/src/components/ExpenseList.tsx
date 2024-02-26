@@ -48,7 +48,7 @@ const ExpenseList = ({ listTitle, list, currency, emptyMsg, group }: ExpenseList
         <Stack bgcolor="background.paper" borderRadius={2}>
           <Stack p={2} direction='row' justifyContent='space-between' alignItems='center' bgcolor='background.paper' borderRadius={2}>
             <Typography color={textColor} variant="h5">{listTitle}</Typography>
-            {<Button variant="contained" startIcon={<MoneyOffIcon />} onClick={() => settleUp(group)} disabled={list.length <= 0}>Settle up</Button>}
+            {<Button variant="contained" startIcon={<MoneyOffIcon />} onClick={() => settleUp(group, list)} disabled={list.length <= 0}>Settle up</Button>}
           </Stack>
           {list.length > 0 ? list.map((trn, index) =>
             <ExpenseCard key={index} currency={currency} expense={trn} onClick={() => setShowModal(trn)} />
