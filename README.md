@@ -4,6 +4,8 @@ SplitBuddy is a web application designed to simplify and streamline the process 
 
 You can access and use the web application at https://split-buddy-app.web.app
 
+![screenshot of the expense application](https://raw.githubusercontent.com/hkam0006/SplitBuddy_TS/main/assets/screenshot.png?raw=true)
+
 ## Features
 
 - **User-Friendly Interface**: Intuitive and easy-to-use interface for effortless expense tracking.
