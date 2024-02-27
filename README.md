@@ -2,7 +2,7 @@
 
 SplitBuddy is a web application designed to simplify and streamline the process of splitting expenses among a group of people. Whether you're planning a trip with friends, managing shared household expenses, or organizing an event, SplitBuddy makes it easy to track and settle debts.
 
-You can access and use the web application at "https://split-buddy-app.web.app"
+You can access and use the web application at https://split-buddy-app.web.app
 
 ## Features
 
