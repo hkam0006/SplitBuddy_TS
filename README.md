@@ -15,7 +15,7 @@ You can access and use the web application at "https://split-buddy-app.web.app"
 
 ## Technologies Used
 
-- **React**: Frontend framework for building a responsive user interface.
+- **React Typescript**: Frontend framework for building a responsive user interface.
 - **Material UI**: Open source react component library
 - **Zustand**: Web application state management
 - **Firestore**: Database for storing user and expense data.
