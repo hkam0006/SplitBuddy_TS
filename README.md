@@ -6,6 +6,13 @@ You can access and use the web application at https://split-buddy-app.web.app
 
 ![screenshot of the expense application](https://raw.githubusercontent.com/hkam0006/SplitBuddy_TS/main/assets/screenshot.png?raw=true)
 
+## Technologies Used
+- Typescript
+- React
+- Firebase (Auth, Hosting, Firestore)
+- Material UI
+- Zustand
+
 ## Features
 
 - **User-Friendly Interface**: Intuitive and easy-to-use interface for effortless expense tracking.
